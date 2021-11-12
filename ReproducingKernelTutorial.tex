@@ -97,18 +97,17 @@ Please interrupt and ask questions}
 \begin{frame}[label = RKRd]{Reproducing Kernels for Functions on $\{1, \ldots, d\}$, aka Vectors}
 
 \vspace{-3ex}
-Let $\cf$ \uncover<1-3>{$=$ all functions on $\{1, \ldots, d\} \text{ ``$=$'' } \reals^d$}
-\hfill \uncover<4>{\alert{$\mA$ is gone.}} \hfill\phantom{a}\\
-\uncover<1-3>{Pick a symmetric, positive definite (positive eigenvalues) matrix $\mA \in \reals^{d \times d}$ to define} an inner product \uncover<1-3>{\vspace{-0.3ex}
+Let $\cf$ \uncover<1-3>{$:=$ all functions on $\{1, \ldots, d\} \text{ ``$=$'' } \reals^d$}\uncover<4>{ be a vector space of functions}\\
+\uncover<1-3>{Pick a symmetric, positive definite (positive eigenvalues) matrix $\mA \in \reals^{d \times d}$ to} define an inner product \vspace{-0.3ex}
 \[
-\ip{f}{h} : = \vf^T \mA \vh, \quad \forall f, h \in \cf, \qquad \text{where } \vf = \bigl(f(t) \bigr)_{t=1}^d \vspace{-0.7ex}
+\only<1-3>{\ip{f}{h} : = \vf^T \mA \vh, \quad \forall f, h \in \cf, \qquad \text{where } \vf = \bigl(f(t) \bigr)_{t=1}^d} \only<4>{\alert{\mA \text{ is gone}}} \vspace{-0.7ex}
 \]
-}\uncover<2-4>{\alert{Reproducing kernel}, $K$, \uncover<1-3>{is defined by 
+\uncover<2-4>{\alert{Reproducing kernel}, $K$, \uncover<1-3>{is defined by 
 $\bigl ( K(t,x) \bigr)_{t,x=1}^d = \mK := \mA^{-1}$, and }has the properties
 \vspace{-0.5ex}
 \begin{gather*}
     \alert{\text{Symmetry }} K(t,x) = K(x,t) \uncover<1-3>{\text{ because $\mA$ is symmetric and thus so is $\mK$}} \\
-    \alert{\text{Positive Definiteness }} \\
+    \alert{\text{Positive Definiteness }} \bigl(  K(x_i,x_j)\bigr)_{i,j = 1}^n \text{ is positive definite for any distinct } x_1, \ldots, x_n \in \{1, \ldots, d\}\\
      \alert{\text{Belonging }} K(\cdot,x)\uncover<1-3>{ = \text{$x^{\text{th}}$ column of $\mK$} =: \vK_x} \in \cf\\
     \alert{\text{Reproduction }} \ip{K(\cdot,x)}{f} \uncover<1-3>{= \vK_x^T \mA \vf = \ve_x \vf} = f(x) \uncover<1-3>{\quad \text{since } \mK := \mA^{-1};  \qquad 
  \ve_x := (0, \ldots, 0, \underbrace{1}_{x^{\text{th}} \text{ position}}, 0, \ldots )^T}
