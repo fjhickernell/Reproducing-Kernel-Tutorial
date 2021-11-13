@@ -33,6 +33,8 @@
 \setlength{\arraycolsep}{0.5ex}
 
 
+\DeclareMathOperator{\SOL}{SOL}
+\DeclareMathOperator{\APP}{APP}
 \DeclareMathOperator{\ERR}{ERR}
 \DeclareMathOperator{\AVG}{AVG}
 \DeclareMathOperator{\INT}{INT}
@@ -90,7 +92,7 @@ Please interrupt and ask questions}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Functions on $\{1, \ldots, d\}$}
+\section{Rep Ker \& Riesz Rep Thm}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -126,10 +128,63 @@ $\bigl ( K(t,x) \bigr)_{t,x=1}^d = \mK := \mA^{-1}$, and }has the properties
 
 \end{frame}
 
-\begin{frame}{Reproducing Kernels for Functions on General Domains}
+\begin{frame}{Reproducing Kernels for Functions on General Domains  \cite{Aro50}}
+
+\vspace{-4ex}
+	Suppose that  $(\cf,\ip{\cdot}{\cdot})$  is a Hilbert space of functions on $\Omega$ for which \alert{function evaluation is bounded}.  Then there exists a \alert{unique reproducing kernel}  $K: \Omega \times \Omega \to \reals$ for which 
+	\vspace{-1ex}
+	\begin{gather*}
+		\underbrace{K(\vt,\vx) = K(\vx,\vt)}_{\alert{\text{symmetry}}},  \quad \underbrace{K(\cdot,\vx) \in \cf}_{\alert{\text{belonging}}}, \quad  \underbrace{f(\vx) = \ip{K(\cdot,\vx)}{f}}_{\alert{\text{reproduction}}}  \qquad \forall \vt, \vx \in \Omega, \; f \in \cf \\
+		K(\mX,\mX) = \bigl(K(\vx_i,\vx_j)\bigr)_{i,j = 1}^n \text{ is \alert{positive definite} for any $n \times d$ $\mX$ with distinct rows lying in $\Omega$}
+	\end{gather*}
+	
+	\vspace{-3ex}
+	$\cf$ is the completion of $\{c_1 K(\cdot,\vx_1) + \cdots + c_nK(\cdot, \vx_n) : n \in \naturals, \vc \in \reals^n\}$; any $K$ satisfying the above implies $\cf$
+	
+\uncover<2->{Riesz Representation Theorem says that for any bounded $\LIN : \cf \to \reals$ there exists a \alert{representer} $g \in \cf$ such that $\LIN(f)  =  \ip{g}{f} $ for all $f \in \cf$.  \alert{What is $g$?}
+\uncover<3->{
+\begin{gather*}
+	g(\vx) \underbrace{=}_{\text{reproduction}} \ip{K(\cdot,\vx)}{g} \underbrace{=}_{\text{symmetry}}  \ip{g}{K(\cdot,\vx)} \underbrace{=}_{\text{representer}} \LIN\bigl(K(\cdot,\vx)\bigr) \qquad \forall \vx \in \Omega\\
+		\uncover<4->{\norm{g}^2 = \ip{g}{g} \underbrace{=}_{\text{representer}} \LIN(g) = \LIN^{\cdot\cdot} \bigl( \LIN^\cdot\bigl(K(\cdot,\cdot \cdot)\bigr)   \bigr)
+		}
+\end{gather*}
+
+\vspace{-3ex}
+\uncover<4->{\alert{Do not} need the definition of $\ip{\cdot}{\cdot}$ to compute $g$ and $\norm{g}$}
+}
+}
+
 \end{frame}
 
 \begin{frame}{Hilbert Spaces of Signed Measures}
+\end{frame}
+
+\begin{frame}{Error for Approximating Linear Functionals}
+
+\vspace{-4ex}
+Suppose that 
+
+\vspace{-2ex}
+\begin{itemize}
+    \item Linear $\SOL : \cf \to \reals$ is the desired \alert{solution} (integral, derivative at a point, etc.)
+    
+    \item $\mX = (\vx_1, \ldots, \vx_n)^T$ is the array of \alert{data sites}
+    
+    \item $\APP_{\mX,\vw}(f) = w_{1} f(\vx_1) + \cdots + w_{n} f(\vx_n)$ is the \alert{approximation}
+\end{itemize}
+Then the approximation error has a tight upper bound of
+\begin{align*}
+    \abs{\SOL(f) - \APP_{\mX,\vw}(f)} &= \abs{\ip{g}{f}} \le \underbrace{\norm{g}}_{\text{badness of $\APP_\mX$}} \, \underbrace{\norm{f}}_{\text{badness of $f$}} \\
+    \text{where } g(\vx) &= \bigl(\SOL - \APP_{\mX,\vw} \bigr) \bigl(K(\cdot,\vx) \bigr) \\
+    \norm{g}^2 & = \bigl(\SOL - \APP_{\mX,\vw} \bigr)^{\cdot\cdot} \Bigl( \bigl(\SOL - \APP_{\mX,\vw} \bigr)^\cdot\bigl(K(\cdot,\cdot \cdot)\bigr)   \Bigr) \\
+    & = \SOL^{\cdot\cdot} \Bigl(\SOL^\cdot\bigl(K(\cdot,\cdot \cdot)\bigr) \Bigr)
+    - 2 \vw_\mX^T \SOL\bigl(K(\mX,\cdot) \bigr) + \vw_\mX^T K(\mX,\mX) \vw_\mX
+\end{align*}
+
+\vspace{-4ex}
+$\APP_\mX$ badness does not require $\ip{\cdot}{\cdot}$, but \alert{only $K$} \hfill
+$K(\mX,\cdot) = \bigl(K(\vx_i,\cdot)\bigr)_{i = 1}^n$, $K(\mX,\mX) = \bigl(K(\vx_i,\vx_j)\bigr)_{i,j = 1}^n$ \\
+Optimal choice of weights is $\vw = K(\mX,\mX)^{-1} \SOL\bigl(K(\mX,\cdot) \bigr)$; optimal choice of data sites $\mX$ \alert{hard}
 \end{frame}
 
 
