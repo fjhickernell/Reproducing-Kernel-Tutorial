@@ -100,25 +100,25 @@ Please interrupt and ask questions}
 
 \vspace{-3ex}
 Let $\cf$ \uncover<1-3>{$:=$ all functions on $\{1, \ldots, d\} \text{ ``$=$'' } \reals^d$}\uncover<4>{ be a vector space of functions}\\
-\uncover<1-3>{Pick a symmetric, positive definite (positive eigenvalues) matrix $\mA \in \reals^{d \times d}$ to} define an inner product \vspace{-0.3ex}
+\uncover<1-3>{Pick a symmetric, positive definite (positive eigenvalues) matrix $\mW \in \reals^{d \times d}$ to} define an inner product \vspace{-0.3ex}
 \[
-\only<1-3>{\ip{f}{h} : = \vf^T \mA \vh, \quad \forall f, h \in \cf, \qquad \text{where } \vf = \bigl(f(t) \bigr)_{t=1}^d} \only<4>{\alert{\mA \text{ is gone}}} \vspace{-0.7ex}
+\only<1-3>{\ip{f}{h} : = \vf^T \mW \vh, \quad \forall f, h \in \cf, \qquad \text{where } \vf = \bigl(f(t) \bigr)_{t=1}^d} \only<4>{\alert{\mW \text{ is gone}}} \vspace{-0.7ex}
 \]
 \uncover<2-4>{\alert{Reproducing kernel}, $K$, \uncover<1-3>{is defined by 
-$\bigl ( K(t,x) \bigr)_{t,x=1}^d = \mK := \mA^{-1}$, and }has the properties
+$\bigl ( K(t,x) \bigr)_{t,x=1}^d = \mK := \mW^{-1}$, and }has the properties
 \vspace{-0.5ex}
 \begin{gather*}
-    \alert{\text{Symmetry }} K(t,x) = K(x,t) \uncover<1-3>{\text{ because $\mA$ is symmetric and thus so is $\mK$}} \\
+    \alert{\text{Symmetry }} K(t,x) = K(x,t) \uncover<1-3>{\text{ because $\mW$ is symmetric and thus so is $\mK$}} \\
     \alert{\text{Positive Definiteness }} \bigl(  K(x_i,x_j)\bigr)_{i,j = 1}^n \text{ is positive definite for any distinct } x_1, \ldots, x_n \in \{1, \ldots, d\}\\
      \alert{\text{Belonging }} K(\cdot,x)\uncover<1-3>{ = \text{$x^{\text{th}}$ column of $\mK$} =: \vK_x} \in \cf\\
-    \alert{\text{Reproduction }} \ip{K(\cdot,x)}{f} \uncover<1-3>{= \vK_x^T \mA \vf = \ve_x \vf} = f(x) \uncover<1-3>{\quad \text{since } \mK := \mA^{-1};  \qquad 
+    \alert{\text{Reproduction }} \ip{K(\cdot,x)}{f} \uncover<1-3>{= \vK_x^T \mW \vf = \ve_x \vf} = f(x) \uncover<1-3>{\quad \text{since } \mK := \mW^{-1};  \qquad 
  \ve_x := (0, \ldots, 0, \underbrace{1}_{x^{\text{th}} \text{ position}}, 0, \ldots )^T}
 \end{gather*}
-\uncover<3->{\alert{Riesz Representation Theorem} says that \uncover<1-3>{for any linear function, $\LIN$, there is a \alert{representer} $g$ such that} $\LIN(f) = \ip{g}{f}\uncover<1-3>{ = \vg^T \mA \vf}$\uncover<1-3>{.  Note}
+\uncover<3->{\alert{Riesz Representation Theorem} says that \uncover<1-3>{for any linear function, $\LIN$, there is a \alert{representer} $g$ such that} $\LIN(f) = \ip{g}{f}\uncover<1-3>{ = \vg^T \mW \vf}$\uncover<1-3>{.  Note}
 \[
 \begin{pmatrix} g(1) \\ \vdots \\ g(d)\end{pmatrix} 
-\uncover<1-3>{= \vg = \mK \mA \vg 
-= \begin{pmatrix} \mK_1^T \mA \vg \\ \vdots \\ \mK_d^T \mA \vg\end{pmatrix}
+\uncover<1-3>{= \vg = \mK \mW \vg 
+= \begin{pmatrix} \mK_1^T \mW \vg \\ \vdots \\ \mK_d^T \mW \vg\end{pmatrix}
 = \begin{pmatrix} \ip{K(\cdot,1)}{g} \\ \vdots \\ \ip{K(\cdot,d)}{g} \end{pmatrix}}
 = \begin{pmatrix} \LIN(K(\cdot,1)) \\ \vdots \\  \LIN(K(\cdot,d)) \end{pmatrix}
 \]
@@ -157,7 +157,37 @@ $\bigl ( K(t,x) \bigr)_{t,x=1}^d = \mK := \mA^{-1}$, and }has the properties
 \end{frame}
 
 \begin{frame}{Hilbert Spaces of Signed Measures}
+	Let $\cm$ be the Hilbert spaced of  measures on $\Omega$ that is the completion of $\{c_1 \delta_{\vx_1} + \cdots + c_n \delta_{\vx_n} :  n \in \naturals, \vc \in \reals^n \}$ under the norm induced by
+	    \begin{equation*}
+		\ip[\cm]{\mu}{\nu} := \int_{\Omega \times \Omega} K(\vt,\vx) \, (\mu \times \nu) (\dif \vt \times \dif \vx),
+	\end{equation*}
+ and $\delta_{\vx}$ is the Dirac measure, i.e., $\int_{\Omega} f(\vt) \, \delta_\vx(\dif \vt) = f(\vx)$.  
+	
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Kernel Ex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Squared Exponential Kernel}
+	
+\end{frame}
+
+\begin{frame}{Mat\'ern Kernel}
+\end{frame}
+
+\begin{frame}{Centered Discrepancy Kernel}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Error Bds}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \begin{frame}{Error for Approximating Linear Functionals}
 
@@ -170,21 +200,23 @@ Suppose that
     
     \item $\mX = (\vx_1, \ldots, \vx_n)^T$ is the array of \alert{data sites}
     
-    \item $\APP_{\mX,\vw}(f) = w_{1} f(\vx_1) + \cdots + w_{n} f(\vx_n)$ is the \alert{approximation}
+    \item $\APP_{\mX,\valpha}(f) = \alpha_{1} f(\vx_1) + \cdots + \alpha_{n} f(\vx_n)$ is the \alert{approximation}
 \end{itemize}
+
+\vspace{-2ex}
 Then the approximation error has a tight upper bound of
 \begin{align*}
-    \abs{\SOL(f) - \APP_{\mX,\vw}(f)} &= \abs{\ip{g}{f}} \le \underbrace{\norm{g}}_{\text{badness of $\APP_\mX$}} \, \underbrace{\norm{f}}_{\text{badness of $f$}} \\
-    \text{where } g(\vx) &= \bigl(\SOL - \APP_{\mX,\vw} \bigr) \bigl(K(\cdot,\vx) \bigr) \\
-    \norm{g}^2 & = \bigl(\SOL - \APP_{\mX,\vw} \bigr)^{\cdot\cdot} \Bigl( \bigl(\SOL - \APP_{\mX,\vw} \bigr)^\cdot\bigl(K(\cdot,\cdot \cdot)\bigr)   \Bigr) \\
+    \abs{\underbrace{\SOL(f) - \APP_{\mX,\valpha}(f)}_{\text{linear, bounded}}} &= \abs{\ip{g}{f}} \le \underbrace{\norm{g}}_{\text{badness of $\APP_\mX$}} \, \underbrace{\norm{f}}_{\text{badness of $f$}} \\
+    \text{where } g(\vx) &= \bigl(\SOL - \APP_{\mX,\valpha} \bigr) \bigl(K(\cdot,\vx) \bigr) \\
+    \norm{g}^2 & = \bigl(\SOL - \APP_{\mX,\valpha} \bigr)^{\cdot\cdot} \Bigl( \bigl(\SOL - \APP_{\mX,\valpha} \bigr)^\cdot\bigl(K(\cdot,\cdot \cdot)\bigr)   \Bigr) \\
     & = \SOL^{\cdot\cdot} \Bigl(\SOL^\cdot\bigl(K(\cdot,\cdot \cdot)\bigr) \Bigr)
-    - 2 \vw_\mX^T \SOL\bigl(K(\mX,\cdot) \bigr) + \vw_\mX^T K(\mX,\mX) \vw_\mX
+    - 2 \valpha_\mX^T \SOL\bigl(K(\mX,\cdot) \bigr) + \valpha_\mX^T K(\mX,\mX) \valpha_\mX
 \end{align*}
 
 \vspace{-4ex}
 $\APP_\mX$ badness does not require $\ip{\cdot}{\cdot}$, but \alert{only $K$} \hfill
 $K(\mX,\cdot) = \bigl(K(\vx_i,\cdot)\bigr)_{i = 1}^n$, $K(\mX,\mX) = \bigl(K(\vx_i,\vx_j)\bigr)_{i,j = 1}^n$ \\
-Optimal choice of weights is $\vw = K(\mX,\mX)^{-1} \SOL\bigl(K(\mX,\cdot) \bigr)$; optimal choice of data sites $\mX$ \alert{hard}
+Optimal weights are $\valpha = K(\mX,\mX)^{-1} \SOL\bigl(K(\mX,\cdot) \bigr)$; optimal data sites,  $\mX$, are \alert{hard} nonlinear optimization
 \end{frame}
 
 
