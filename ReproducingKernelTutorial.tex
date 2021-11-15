@@ -128,6 +128,7 @@ $\bigl ( K(t,x) \bigr)_{t,x=1}^d = \mK := \mW^{-1}$, and }has the properties
 
 \end{frame}
 
+
 \begin{frame}{Reproducing Kernels for Functions on General Domains  \cite{Aro50}}
 
 \vspace{-4ex}
@@ -170,16 +171,75 @@ $\bigl ( K(t,x) \bigr)_{t,x=1}^d = \mK := \mW^{-1}$, and }has the properties
 \section{Kernel Ex}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Squared Exponential Kernel}
+\begin{frame}{Squared Exponential Kernel on $\reals$}
 	
+\begin{tabular}{m{0.5\textwidth}m{0.5\textwidth}}
+	The squared exponential (aka Gaussian) kernel for univariate functions takes the form 
+	\[
+	K(t,x) = A \exp\bigl(-\gamma^2\abs{t-x}^2 \bigr) , \qquad t, x \in \reals
+	\]
+corresponds to the Hilbert space of functions with norm \cite[(6.18)]{RasWil06a}
+\begin{equation*}
+\norm{f}^2 = A\sqrt{\pi} \sum_{m=0}^\infty\frac{\int_{\reals} \abs{f^{(m)}(x)}^2 \, \dif x}{m! 4^m \gamma^{2m+1}}
+\end{equation*}
+which means that functions  have all deriviatives square integrable.
+&
+\includegraphics[width=0.45\textwidth]{RK-sqexpker.eps}
+\end{tabular}
 \end{frame}
 
-\begin{frame}{Mat\'ern Kernel}
+\begin{frame}{Squared Exponential Kernel on $\reals^d$}
+\begin{tabular}{m{0.6\textwidth}m{0.4\textwidth}}
+	The squared exponential kernel for $d$-variate functions takes the form 
+	\begin{multline*}
+	K(t,x) = A \exp\bigl(-\gamma_1^2\abs{t_1-x_1}^2 - \cdots - \gamma_d^2\abs{t_d-x_d}^2 \bigr) , \\
+	 t, x \in \reals
+	\end{multline*}
+	corresponds to the Hilbert space of functions with norm
+	\begin{gather*}
+		\norm[2]{D^{\vm} f}^2 := \int_{\reals^d} \abs{\frac{\partial^{\norm[1]{\vm}}f(\vx)}{\partial x_1^{m_1} \cdots \partial x_d^{m_d}}}^2 \, \dif \vx \\
+		\norm{f}^2 =  A\sqrt{\pi}  \sum_{\vm \in \natzero^d} \frac{\norm[2]{D^{\vm} f}^2}{\norm[1]{\vm}! \, 4^{\norm[1]{\vm}} \prod_{k=1}^d \gamma_j^{2m_j}}
+	\end{gather*}
+	which means that functions have all deriviatives square integrable.  This kernel is \alert{isotropic}.
+	&
+	\includegraphics[width=0.38\textwidth]{RK2-sqexpker.eps}
+\end{tabular}
+
 \end{frame}
 
-\begin{frame}{Centered Discrepancy Kernel}
+\begin{frame}{Mat\'ern Kernels}
+A family of kernels with a range of smoothness 
+
+
 \end{frame}
 
+
+
+\begin{frame}{The Centered Discrepancy Kernel \cite{Hic97a}}
+	\vspace{-2ex}
+	\begin{tabular}{m{0.6\textwidth}m{0.4\textwidth}}
+	A reproducing kernel used to analyze cubatures gives the weighted centered discrepancy takes the form
+	
+	\vspace{-4ex}
+	\begin{multline*}
+	K(\vt,\vx) : = \prod_{k=1}^d \Bigl[ 1 + \frac {\gamma_j}2 \bigl\{ \abs{t_k - 1/2} + \abs{x_k -1/2} - \abs{t_k-x_k} \bigr\} \Bigr] \\
+	 \vt, \vx \in [0,1]^d
+	\end{multline*}
+
+\vspace{-2ex}
+which corresponds to the Hilbert space for functions defined on $[0,1]^d$ with the following norm:
+
+	\vspace{-4ex}
+		\begin{gather*}
+			\norm[2]{D^{\vm} f}^2 := \int_{\reals^d} \abs{\frac{\partial^{\norm[1]{\vm}}f(\vx)}{\partial x_1^{m_1} \cdots \partial x_d^{m_d}}}^2 \bigg \rvert_{x_j = 1/2 \text{ for } m_j = 0} \, \prod_{j \text{ s.t. } m_j > 0} \dif x_j  \\
+			\norm{f}^2 : = A \sum_{\norm[\infty]{\vm} \le 1} \frac{\norm[2]{D^{\vm} f}^2}{\gamma_j}
+		\end{gather*}
+	Mixed partial derivatives of up to order one in each coordinate must be square integrable.
+	&
+	%\includegraphics[width=0.38\textwidth]{RK-ctrdiscker.eps}
+		\includegraphics[width=0.38\textwidth]{RK2-ctrdiscker.eps}
+		\end{tabular}
+\end{frame}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
