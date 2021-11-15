@@ -40,6 +40,7 @@
 \DeclareMathOperator{\INT}{INT}
 \DeclareMathOperator{\LIN}{LINEAR}
 \DeclareMathOperator{\BAD}{BAD}
+%\DeclareMathOperator{\opt}{opt}
 \newcommand{\dataN}{\bigl(\hf(\vk_i)\bigr)_{i=1}^n}
 \newcommand{\dataNj}{\bigl(\hf(\vk_i)\bigr)_{i=1}^{n_j}}
 \newcommand{\dataNjd}{\bigl(\hf(\vk_i)\bigr)_{i=1}^{n_{j^\dagger}}}
@@ -54,7 +55,7 @@
 
 \renewcommand{\OffTitleLength}{-7ex}
 \setlength{\FJHThankYouMessageOffset}{-8ex}
-\title{Reproducing and Covariance Kernels}
+\title{Reproducing Kernels}
 \author[]{Fred J. Hickernell}
 \institute{Department of Applied Mathematics \qquad
 	Center for Interdisciplinary Scientific Computation \\
@@ -63,13 +64,13 @@
 	\href{mailto:hickernell@iit.edu}{\url{hickernell@iit.edu}} \qquad
 	\href{http://mypages.iit.edu/~hickernell}{\url{mypages.iit.edu/~hickernell}}}
 
-\thanksnote{Thanks to the Illinois Tech SIAM Student Chapter for the invitation \\
-Thanks to many students and collaborators for teaching me \\
-Slides available at \href{https://speakerdeck.com/fjhickernell/riesz-representation-theorem}{\nolinkurl{speakerdeck.com/riesz-representation-theorem}} \\
+\thanksnote{Thanks to Mac Hyman for the invitation \\
+Thanks to many students and collaborators \\
+Slides available at \href{https://speakerdeck.com/fjhickernell/reproducing-kernel-tutorial}{\nolinkurl{speakerdeck.com/fjhickernell/reproducing-kernel-tutorial}} \\
 Please interrupt and ask questions}
 	
 %\event{Happy Fred}
-\date[]{October 19, 2021}
+\date[]{November 15, 2021}
 
 \input FJHDef.tex
 
@@ -86,7 +87,27 @@ Please interrupt and ask questions}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\begin{frame}{What Do We Do with Reproducing Kernel Hilbert Spaces?}
 
+\vspace{-5ex}
+	\begin{itemize}
+		\item Use the Reisz Representation Theorem to derive error bounds for algorithms for linear problems, such as integration, function approximation, solving linear differential equations%
+				\uncover<2->{, \alert{BUT}
+			\begin{itemize}
+				\item You must be able to solve the problem for your reproducing kernel
+				\item You must pick a kernel that matches your input function
+				\item You may need to tune the kernel parameters
+		\end{itemize}}
+		
+		\item Derive optimal algorithms%
+		\uncover<2->{, \alert{BUT} it takes $\Order(n^3)$ operations to compute the weights}
+		\item Determine how fast the error bounds decay to zero, and even whether convergence depends significantly on the number of variables
+		\item Include trends\uncover{, \alert{BUT} I  have not prepared that for today.}
+		\item Derive a parallel analysis using Gaussian processes where the reproducing kernel is interpreted as a covariance kernel
+				\uncover<2->{, \alert{BUT} I have not prepared that for today}
+	\end{itemize}	
+
+\end{frame}
 
 
 
@@ -157,15 +178,6 @@ $\bigl ( K(t,x) \bigr)_{t,x=1}^d = \mK := \mW^{-1}$, and }has the properties
 
 \end{frame}
 
-\begin{frame}{Hilbert Spaces of Signed Measures}
-	Let $\cm$ be the Hilbert spaced of  measures on $\Omega$ that is the completion of $\{c_1 \delta_{\vx_1} + \cdots + c_n \delta_{\vx_n} :  n \in \naturals, \vc \in \reals^n \}$ under the norm induced by
-	    \begin{equation*}
-		\ip[\cm]{\mu}{\nu} := \int_{\Omega \times \Omega} K(\vt,\vx) \, (\mu \times \nu) (\dif \vt \times \dif \vx),
-	\end{equation*}
- and $\delta_{\vx}$ is the Dirac measure, i.e., $\int_{\Omega} f(\vt) \, \delta_\vx(\dif \vt) = f(\vx)$.  
-	
-\end{frame}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Kernel Ex}
@@ -208,12 +220,20 @@ which means that functions  have all deriviatives square integrable.
 \end{frame}
 
 \begin{frame}{Mat\'ern Kernels}
-A family of kernels with a range of smoothness 
+	
+\vspace{-5ex}
+\begin{tabular}{b{0.5\textwidth}p{0.5\textwidth}}
+A popular family of kernels with a range of smoothness depending on $r$ with an associate norm that is not simple to write down:
+& 	\includegraphics[width=0.45\textwidth]{RK-maternkerthreehalfs.eps}
+\end{tabular}
+\begin{align*}
+	K_r(\vt,\vx) &= A \norm[2]{\vt - \vx}^r \text{Mod Bessel Sec}_r (\gamma \norm[2]{\vt - \vx}) \\
+	K_{1/2}(\vt,\vx) & = A_{1/2} \exp(-\gamma\norm[2]{\vt - \vx} )  \quad \alert{\text{not very smooth}} \\
+	K_{3/2}(\vt,\vx) & = A_{3/2} (1 + \gamma\norm[2]{\vt - \vx} ) \exp(-\gamma\norm[2]{\vt - \vx} )  \quad \alert{\text{somewhat  smoother}}
+\end{align*}
 
 
 \end{frame}
-
-
 
 \begin{frame}{The Centered Discrepancy Kernel \cite{Hic97a}}
 	\vspace{-2ex}
@@ -222,7 +242,7 @@ A family of kernels with a range of smoothness
 	
 	\vspace{-4ex}
 	\begin{multline*}
-	K(\vt,\vx) : = \prod_{k=1}^d \Bigl[ 1 + \frac {\gamma_j}2 \bigl\{ \abs{t_k - 1/2} + \abs{x_k -1/2} - \abs{t_k-x_k} \bigr\} \Bigr] \\
+	K(\vt,\vx) : = \prod_{k=1}^d \Bigl[ 1 + \frac {\gamma_j}2 \bigl\{ \abs{t_k - 1/2} + \abs{x_k -1/2} - \abs{t_k-x_k} \bigr\} \Bigr]. \\
 	 \vt, \vx \in [0,1]^d
 	\end{multline*}
 
@@ -240,6 +260,103 @@ which corresponds to the Hilbert space for functions defined on $[0,1]^d$ with t
 		\includegraphics[width=0.38\textwidth]{RK2-ctrdiscker.eps}
 		\end{tabular}
 \end{frame}
+
+
+\begin{frame}{The Delta Kernel}
+	\vspace{-2ex}
+	\begin{tabular}{m{0.5\textwidth}m{0.5\textwidth}}
+		A reproducing kernel with an uncountable basis is 
+		
+		\vspace{-4ex}
+		\begin{equation*}
+			K(\vt,\vx) : = \begin{cases} 1 + \gamma, & \vt = \vx, \\ 1, & \text{otherwise}, \end{cases}
+			\qquad \vt, \vx \in [0,1]^d
+		\end{equation*}
+		
+		\vspace{-2ex}
+		which corresponds to the Hilbert space for functions that are a constant everywhere except possibly at a countable number of points.
+		
+		\vspace{-4ex}
+		\begin{gather*}
+			I(f) = \int_{[0,1]^d} f(\vx) \, \dif \vx \\
+		    \norm{f}^2 : = \abs{I(f)}^2 + \sum_{\vx \in [0,1]^d} \frac{\abs{f(\vx) - I(f)}^2}{\gamma}
+		\end{gather*}
+	This Hilbert space has an uncountable basis.
+		&
+		%\includegraphics[width=0.38\textwidth]{RK-ctrdiscker.eps}
+		\includegraphics[width=0.38\textwidth]{RK-deltaker.eps}
+	\end{tabular}
+\end{frame}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Assoc Measures}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\begin{frame}{Hilbert Spaces of Signed Measures}
+	
+	\vspace{-4ex}
+	Let $\cm$ be the Hilbert spaced of  measures on $\Omega$ that is the completion of $\{c_1 \delta_{\vx_1} + \cdots + c_n \delta_{\vx_n} :  n \in \naturals, \vc \in \reals^n \}$ under the norm induced by
+	\begin{equation*}
+		\ip[\cm]{\mu}{\nu} := \int_{\Omega \times \Omega} K(\vt,\vx) \, (\mu \times \nu) (\dif \vt \times \dif \vx)
+	\end{equation*}
+	and $\delta_{\vx}$ is the Dirac measure, i.e., $\int_{\Omega} f(\vt) \, \delta_\vx(\dif \vt) = f(\vx)$.  There exists a one-to-one and onto, isometric  (I think) mapping $T : \cm \to \cf$ defined as 
+		\begin{equation*}
+			T(\mu)(\vx) := \int_\Omega K(\vt, \vx) \, \mu(\dif t) \qquad \forall x \in \Omega, \mu \in \cm
+		\end{equation*}
+Good question:  is there a measure $\omega $ on $\Omega \times \Omega$ such that 
+		\begin{equation*}
+      \int_{\Omega \times \Omega} K(\vt, \vs)K(\vu,\vx) \, \omega(\dif \vs \times \dif \vu)  = K(\vt,\vx) \qquad \forall \vt, \vx \in \Omega?
+\end{equation*}
+This would be like the $\mW$ for functions on $\{1, \ldots, d\}$
+
+\end{frame}
+
+\begin{frame}{Hilbert Spaces with Countable Bases}
+	
+\vspace{-4ex}
+Hilbert spaces of functions on $\Omega$ with countable bases can be written in terms of an $L^2(\Omega)$ basis
+
+\vspace{-4ex}
+\[
+f(\vx) = \sum_{\vk} \hf(\vk) \varphi_\vk(\vx), \qquad \int_\Omega \varphi_\vk(\vx) \varphi_\vl(\vx)  \, \dif \vx = \delta_{\vk,\vl}
+\]
+
+\vspace{-2ex}
+and the reproducing kernel is
+\vspace{-2ex}
+\begin{gather*}
+K(\vt,\vx) =  \sum_{\vk} \lambda_\vk \varphi_\vk(\vt) \varphi_\vk(\vx),  \qquad
+\text{note that }  \int_\Omega K(\vx,\vx) \, \dif \vx = \sum_{\vk} \lambda_\vk  < \infty, \quad \text{so } \lambda_{\vk} \to 0 \\
+\ip{f}{g} := \sum_{\vk} \frac{\hf(\vk) \hg(\vk)}{\lambda_\vk}, \qquad \text{since this implies } 
+\ip{K(\cdot,\vx)}{f} := \sum_{\vk} \frac{\lambda_\vk \varphi_\vk(\vx) \hf(k)}{\lambda_\vk} = \sum_{\vk} \varphi_\vk(\vx) \hf(k) =  f(\vx)
+\end{gather*}
+
+\vspace{-2ex}
+If we formally define the distribution $m(\vx) = \sum_{\vk} \frac{\hf(\vk) \varphi_\vk(\vx)}{\lambda_\vk }$, then
+
+\vspace{-2ex}
+\[
+\int_{\Omega} K(\vt,\vx) m(\vt) \, \dif \vt = 
+\int_{\Omega}  \sum_{\vk,\vl} \lambda_\vk \varphi_\vk(\vt) \varphi_\vk(\vx) 
+\frac{\hf(\vl) \varphi_\vl(\vt)}{\lambda_\vl}  \, \dif \vt = 
+\sum_{\vk}  \varphi_\vk(\vx) \hf(\vk) = f(\vx)
+\]
+So this $m(\vx) \dif \vx$ seems to be the $\mu(\dif \vx)$ that gets mapped into $f$
+
+
+\end{frame}
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -260,7 +377,7 @@ Suppose that
     
     \item $\mX = (\vx_1, \ldots, \vx_n)^T$ is the array of \alert{data sites}
     
-    \item $\APP_{\mX,\valpha}(f) = \alpha_{1} f(\vx_1) + \cdots + \alpha_{n} f(\vx_n)$ is the \alert{approximation}
+    \item $\APP_{\mX,\valpha}(f) = \alpha_{1} f(\vx_1) + \cdots + \alpha_{n} f(\vx_n) = \valpha^T f(\mX)$ is the \alert{approximation}
 \end{itemize}
 
 \vspace{-2ex}
@@ -270,7 +387,7 @@ Then the approximation error has a tight upper bound of
     \text{where } g(\vx) &= \bigl(\SOL - \APP_{\mX,\valpha} \bigr) \bigl(K(\cdot,\vx) \bigr) \\
     \norm{g}^2 & = \bigl(\SOL - \APP_{\mX,\valpha} \bigr)^{\cdot\cdot} \Bigl( \bigl(\SOL - \APP_{\mX,\valpha} \bigr)^\cdot\bigl(K(\cdot,\cdot \cdot)\bigr)   \Bigr) \\
     & = \SOL^{\cdot\cdot} \Bigl(\SOL^\cdot\bigl(K(\cdot,\cdot \cdot)\bigr) \Bigr)
-    - 2 \valpha_\mX^T \SOL\bigl(K(\mX,\cdot) \bigr) + \valpha_\mX^T K(\mX,\mX) \valpha_\mX
+    - 2 \valpha^T \SOL\bigl(K(\mX,\cdot) \bigr) + \valpha^T K(\mX,\mX) \valpha
 \end{align*}
 
 \vspace{-4ex}
@@ -281,13 +398,50 @@ Optimal weights are $\valpha = K(\mX,\mX)^{-1} \SOL\bigl(K(\mX,\cdot) \bigr)$; o
 
 
 \begin{frame}{Optimal Function Approximation}
+	Consider function evaluation at $\vx$, i.e., $\SOL_\vx(f)  = f(\vx)$.  In this case,
+	\[
+	\SOL_\vx^{\cdot\cdot} \Bigl(\SOL_\vx^\cdot\bigl(K(\cdot,\cdot \cdot)\bigr) \Bigr) = K(\vx,\vx), \qquad 
+	 \SOL_\vx\bigl(K(\mX,\cdot) = K(\mX,\vx)
+	\]
+	and the optimal algorithm is 
+	\begin{align*}
+	\APP_{\vx,\mX,\opt}(f) &= K(\vx,\mX) K(\mX,\mX)^{-1} f(\mX)\\
+	\abs{f(\vx) - K(\vx,\mX) K(\mX,\mX)^{-1} f(\mX)}^2 &\le  
+	\bigl[ K(\vx,\vx) 
+	- K(\vx,\mX) K(\mX,\mX)^{-1}  K(\mX,\vx) \bigr] \norm{f}^2 \\
+	& \le  
+	\underbrace{\bigl[ K(\vx,\vx) 
+	- K(\vx,\mX) K(\mX,\mX)^{-1}  K(\mX,\vx) \bigr]}_{\text{only depends on }\mX} 
+\bignorm{f - \underbrace{K(\cdot,\mX) K(\mX,\mX)^{-1} f(\mX)}_{\text{best approximation to } f}}^2
+	\end{align*}
+Note that $\APP_{\cdot,\mX,\opt}(f)$ is in the Hilbert space, and even in the span of $K(\cdot,\vx_1), \ldots, K(\cdot,\vx_n)$.
+
+Also note that the optimal linear approximation for an arbitrary linear functional is just the linear functional applied to the optimal function approximation.
 \end{frame}
+
+\begin{frame}{Why Is the Optimal Approximation Linear?}
+	\vspace{-4ex}
+	Fix $\vx \in \Omega$.  Let 
+	\begin{align*}
+		\cb_{\mX,f(\mX),R} & = \{ g \in \cf  :  \norm{g}^2 \le R^2 + \norm{ \APP_{\cdot,\mX,\opt}(f)} ^2, \ g(\mX) = f(\mX)\}  \quad \text{functions that look like $f$}\\
+		\cb_{\mX,\perp,R} & = \{h \in \cf :  \norm{h} \le R, \ h(\mX) = \vzero\} \qquad \text{functions that vanish at the data sites} \\
+		& = \{ h \in \cf :  \norm{h} \le R, \   \ip{h}{K(\cdot,\vx_1)}= \cdots   = \ip{h}{K(\cdot,\vx_n)} = 0 \}
+	\end{align*}
+Note that any $g \in \cb_{\mX,f(\mX),R}$ may be written as $g = \APP_{\cdot,\mX,\opt}(f) + g_\perp$ with $g_\perp \in \cb_{\mX,\perp,R}$
+	\begin{gather*}
+	y_{\opt} := \argmin_{y \in \reals}  \ERR(y) \\
+	\ERR(y) : = \max_{g \in \cb_{\mX,f(\mX),R} } \abs{g(\vx) - y} 
+	=  \max_{g_\perp \in \cb_{\mX,\perp,R}} \abs{ \APP_{\vx,\mX,\opt}(f) + g_\perp(\vx) - y} 
+	\end{gather*}
+Since for every $g_\perp \in  \cb_{\mX,\perp,R}$ it also is true that  $-g_\perp \in  \cb_{\mX,\perp,R}$, the optimal choice of $y$ is $\APP_{\vx,\mX,\opt}(f)$.
+\end{frame}
+
 
 \begin{frame}{Optimal Approximation of  Linear Functionals}
 \end{frame}
 
 
-\finalthanksnote{These slides are  available at \\  \href{https://speakerdeck.com/fjhickernell/riesz-representation-theorem}{\nolinkurl{speakerdeck.com/riesz-representation-theorem}}}
+\finalthanksnote{These slides are  available at \\  \href{https://speakerdeck.com/fjhickernell/reproducing-kernel-tutorial}{\nolinkurl{speakerdeck.com/fjhickernell/reproducing-kernel-tutorial}}}
 
 \thankyouframe
 
